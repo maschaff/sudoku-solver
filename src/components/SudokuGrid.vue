@@ -1,20 +1,18 @@
 <template>
-  <div>
-    <table>
-      <tr v-for="index in factor * factor" :key="index" :class="{ nRow: multipleOfFactor(index) }">
-        <td v-for="index in factor * factor" :key="index" :class="{ nCol: multipleOfFactor(index) }">
-          N
-        </td>
-      </tr>
-    </table>
-  </div>
+  <table>
+    <tr v-for="row in size" :key="row" :class="{ nRow: multipleOfSqrt(row) }">
+      <td v-for="col in size" :key="col" :class="{ nCol: multipleOfSqrt(col) }" @click="printElement(row, col)">
+        {{ sudoku[row -1][col -1] }}
+      </td>
+    </tr>
+  </table>
 </template>
 
 <script>
 export default {
   name: "SudokuGrid",
   props: {
-    factor: {
+    size: {
       type: Number,
       required: true
     },
@@ -24,8 +22,11 @@ export default {
     }
   },
   methods: {
-    multipleOfFactor(n) {
-      return n % this.factor === 0;
+    multipleOfSqrt(n) {
+      return n % Math.sqrt(this.size) === 0;
+    },
+    printElement(row, col) {
+      console.log(row + ', ' + col)
     }
   }
 }
@@ -54,12 +55,18 @@ td:first-child {
 }
 
 td {
-  width: 50px;
-  height: 50px;
+  width: 80px;
+  height: 80px;
   padding: 0;
   margin: 0;
   text-align: center;
   border: solid 2px;
+  font-size: xxx-large;
+  /*font-weight: bold;*/
+}
+
+td:hover {
+  background-color: lightgrey;
 }
 
 </style>
