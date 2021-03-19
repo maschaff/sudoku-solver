@@ -2,8 +2,14 @@
   <table>
     <tr>
       <td v-for="n in size" :key="n"
-          :class="{ selected: isSelected(n) }"
-          @click="select(n)">{{n}}
+          :class="{ selected: n === selected }"
+          @click="$emit('select', n)">{{n}}
+      </td>
+      <td :class="{ 'bg-primary': notesOn }" @click="$emit('toggleNotes')">
+        <b-icon icon="pencil-square" />
+      </td>
+      <td :class="{ 'bg-primary': deleteOn }" @click="$emit('toggleDelete')">
+        <b-icon icon="trash" />
       </td>
     </tr>
   </table>
@@ -12,15 +18,7 @@
 <script>
 export default {
   name: "SudokuSelector",
-  props: ['size', 'selectedFill'],
-  methods: {
-    isSelected(n) {
-      return n === this.selectedFill
-    },
-    select(n) {
-      this.$emit('select',  n)
-    }
-  }
+  props: ['size', 'selected', 'notesOn', 'deleteOn']
 }
 </script>
 

@@ -1,8 +1,11 @@
 <template>
   <table>
-    <tr v-for="row in size" :key="row" :class="{ nRow: multipleOfSqrt(row) }">
-      <td v-for="col in size" :key="col" :class="{ nCol: multipleOfSqrt(col) }" @click="printElement(row, col)">
-        {{ sudoku[row -1][col -1] }}
+    <tr v-for="(row, i) in size" :key="row" :class="{ nRow: multipleOfSqrt(row) }">
+      <td v-for="(col, j) in size" :key="col"
+          :class="{ nCol: multipleOfSqrt(col), selected: isSelected(sudoku[i][j]) }"
+          @click="mark(i, j)">
+        <span v-if="sudoku[i][j] != null" >{{sudoku[i][j]}}</span>
+<!--        <span v-else-if="playerSolution[i][j] != null" class="text-primary">{{playerSolution[i][j]}}</span>-->
       </td>
     </tr>
   </table>
@@ -19,14 +22,51 @@ export default {
     sudoku: {
       type: Array,
       required: true
+    },
+    selected: {
+      type: Number
+    }
+  },
+  data() {
+    return {
+      playerSolution: {},
+      notes: []
     }
   },
   methods: {
+    initPlayerSolution() {
+      let obj = {};
+
+      for(let i = 0; i < this.size; i++){
+        for(let j = 0; j < this.size; j++){
+          obj[i][j] = {
+            value: this.sudoku[i][j],
+            player: this.sudoku[i][j],
+            notes: []
+          }
+        }
+      }
+
+      this.playerSolution = obj;
+    },
+    isSelected(val){
+      return val === this.selected;
+    },
     multipleOfSqrt(n) {
       return n % Math.sqrt(this.size) === 0;
     },
-    printElement(row, col) {
-      console.log(row + ', ' + col)
+    mark(row, col){
+      console.log(row + ',' + col)
+      this.set(this.playerSolution, row, )
+      this.playerSolution[row][col] = this.selected;
+    }
+  },
+  watch: {
+    sudoku: {
+      function() {
+        if(this.sudoku !== []) this.initPlayerSolution()
+      },
+      deep: true
     }
   }
 }
@@ -62,10 +102,13 @@ td {
   text-align: center;
   border: solid 2px;
   font-size: xxx-large;
-  /*font-weight: bold;*/
 }
 
 td:hover {
+  background-color: lightblue;
+}
+
+.selected {
   background-color: lightgrey;
 }
 

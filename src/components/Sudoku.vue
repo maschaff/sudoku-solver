@@ -1,12 +1,19 @@
 <template>
-  <b-container fluid="">
-    <br>
-    <div>
-      <sudoku-grid :size="size" :sudoku="sudoku" />
+  <b-container>
+    <h1 class="text-center">Sudoku</h1>
+    <div class="pt-3 pb-3">
+      <sudoku-grid class="mx-auto" :size="size" :sudoku="sudoku" :selected="selected" />
     </div>
-    <br>
-    <div class="pt-12">
-      <sudoku-selector :size="size" :selectedFill="selectedFill" @select="select($event)"/>
+    <div>
+      <sudoku-selector class="mx-auto"
+                       :size="size"
+                       :selected="selected"
+                       :notesOn="notesOn"
+                       :deleteOn="deleteOn"
+                       @select="select($event)"
+                       @toggleNotes="toggleNotes"
+                       @toggleDelete="toggleDelete"
+      />
     </div>
   </b-container>
 </template>
@@ -15,7 +22,7 @@
 import SudokuGrid from './SudokuGrid'
 import SudokuSelector from "@/components/SudokuSelector";
 
-import puzzle from '../test_puzzles/test1'
+import testPuzzle from '../test_puzzles/test1'
 
 export default {
   name: "Sudoku",
@@ -27,11 +34,13 @@ export default {
     return {
       size: 9,
       sudoku: [],
-      selectedFill: 1
+      selected: 1,
+      notesOn: false,
+      deleteOn: false
     }
   },
   created() {
-    this.sudoku = puzzle
+    this.sudoku = testPuzzle.puzzle
     this.addKeypressListener()
   },
   methods: {
@@ -42,7 +51,15 @@ export default {
       })
     },
     select(val) {
-      this.selectedFill = val
+      this.selected = val
+    },
+    toggleNotes() {
+      this.deleteOn = false;
+      this.notesOn = !this.notesOn;
+    },
+    toggleDelete() {
+      this.notesOn = false;
+      this.deleteOn = !this.deleteOn;
     }
   }
 }
