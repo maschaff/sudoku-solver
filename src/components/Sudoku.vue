@@ -1,6 +1,7 @@
 <template>
   <b-container>
     <h1 class="text-center">Sudoku</h1>
+    <button @click="solve">Solve</button>
     <div class="pt-3 pb-3">
       <sudoku-grid class="mx-auto" :size="size" :sudoku="sudoku" :selected="selected" />
     </div>
@@ -19,6 +20,7 @@
 </template>
 
 <script>
+import Sudoku from '../services/sudoku'
 import SudokuGrid from './SudokuGrid'
 import SudokuSelector from "@/components/SudokuSelector";
 
@@ -44,6 +46,9 @@ export default {
     this.addKeypressListener()
   },
   methods: {
+    solve() {
+      Sudoku.solve(this.sudoku);
+    },
     addKeypressListener() {
       document.addEventListener('keydown', (event) => {
         let key = parseInt(event.key)

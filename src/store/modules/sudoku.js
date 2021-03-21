@@ -2,17 +2,17 @@ import Vue from 'vue'
 import sampleGrid from '../../test_puzzles/test1'
 
 export default {
-    store: {
+    state: {
         grid: []
     },
     getters: {
-        getSideLength(store) {
-            return store.grid.length;
+        getSideLength(state) {
+            return state.grid.length;
         },
     },
     actions: {
-        initGrid(store) {
-            Vue.set(store, 'grid', sampleGrid.puzzle)
+        initGrid(state) {
+            Vue.set(state, 'grid', sampleGrid.puzzle)
         }
     },
     mutations: {
