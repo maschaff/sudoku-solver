@@ -4,8 +4,44 @@ export default {
 
     solve(sudoku) {
         let binaryMatrix = this.convertSudokuToBinaryMatrix(sudoku);
-        this.printBinaryMatrix(binaryMatrix);
-        return DancingLinks.solveWithDancingLinks(binaryMatrix);
+        let indexList = DancingLinks.solveExactCover(binaryMatrix);
+        // return this.buildSolution(indexList, binaryMatrix);
+        console.log(indexList);
+        return indexList;
+    },
+
+    //Builds a solution given a list of indexes referencing a binaryMatrix representation of the sudoku puzzle
+    buildSolution(indexList, binaryMatrix) {
+        let solution = [];
+        let n = binaryMatrix.length;
+        let index = 0;
+
+        for(let row = 0; row < n; row++){
+            let values = [];
+
+            for(let col = 0; col < n; col++){
+                values.push(this.getValue(binaryMatrix[indexList[index++]]))
+            }
+
+            solution.push(values);
+        }
+
+        return solution;
+    },
+
+    // Determines the appropriate candidate for a position given a sparse array representing sudoku constraints
+    getValue(row) {
+        let n = Math.sqrt(row.length / 4);
+        let offset = n * n;
+
+        //we only need to look at the 2nd constraint to get the candidate (could also use the 3rd or 4th constraint)
+        for(let i = offset; i < row.length - (offset * 2); i++){
+            if(row[i] === 1) {
+                return i - offset + 1 % n;
+            }
+        }
+
+        return null;
     },
 
     // Builds a binary matrix representation of a given sudoku puzzle which can be solved as an exact cover problem
@@ -24,6 +60,7 @@ export default {
                 }
             }
         }
+
         return result;
     },
 
@@ -52,11 +89,13 @@ export default {
                 result.push(0);
             }
         }
+
         return result;
     },
 
     printBinaryMatrix(matrix) {
         let result = ""
+
         for (let i = 0; i < matrix.length; i++) {
             for (let j = 0; j < matrix[i].length; j++) {
                 if (matrix[i][j] > 0) {
@@ -64,10 +103,10 @@ export default {
                 } else {
                     result += "  ";
                 }
-                //result += matrix[i][j] + " ";
             }
             result += "\n";
         }
+
         console.log(result);
     }
 }
